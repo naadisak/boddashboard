@@ -1,25 +1,171 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOD Strategic Command Center | Project 600K</title>
+    <!-- Fonts: IBM Plex Sans Thai for Professional look -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;600;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --accent-cyan: #00f2ff;
+            --text-main: #f1f5f9;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(0, 242, 255, 0.2);
+        }
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>BOD Thailand Dashboard</title>    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  </head>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #16213e 0%, #0a0e17 100%);
+        }
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
-  </body>
+        /* Hero Section */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
 
+        .status-badge {
+            background: rgba(0, 230, 118, 0.1);
+            color: #00e676;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border: 1px solid #00e676;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            max-width: 700px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* The Launch Button (แผนแก้ทางมวย) */
+        .btn-launch {
+            background: var(--accent-cyan);
+            color: #000;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 242, 255, 0.6);
+            background: #fff;
+        }
+
+        /* 3-Phase Strategy Cards */
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            width: 100%;
+            margin-top: 60px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            text-align: left;
+            transition: 0.3s;
+        }
+
+        .card:hover { background: rgba(0, 242, 255, 0.05); border-color: var(--accent-cyan); }
+
+        .card h3 { color: var(--accent-cyan); margin-bottom: 15px; font-size: 1.1rem; }
+        .card p { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; }
+
+        footer {
+            padding: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #475569;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="status-badge">System Status: Strategic Engine Active</div>
+        <h1>BOD Strategic Dashboard</h1>
+        <p class="subtitle">
+            ยกระดับการจัดการข้อมูลภาระโรค (Burden of Disease) สู่ระบบนำเสนอข้อมูลมาตรฐานสากล 
+            เพื่อการตัดสินใจเชิงนโยบายด้วย Actionable Insights ที่แม่นยำที่สุด
+        </p>
+
+        <!-- แก้ปัญหาหน้าขาวโดยใช้การ Launch ใน Tab ใหม่ที่เสถียรกว่า -->
+        <a href="https://bodpremium-eqau563l.manus.space" target="_blank" class="btn-launch">
+            <i class="fa-solid fa-bolt"></i> Launch Strategic Demo
+        </a>
+
+        <!-- แผนงาน 3 ระยะที่ระบุในข้อเสนอโครงการ -->
+        <div class="strategy-grid">
+            <div class="card">
+                <h3>Phase 1: Initiation</h3>
+                <p>วิเคราะห์โครงสร้างข้อมูลและกำหนดความต้องการเชิงนโยบาย (Requirement Mapping)</p>
+            </div>
+            <div class="card">
+                <h3>Phase 2: Development</h3>
+                <p>สร้าง Core Engine และบูรณาการข้อมูล DALY ให้กลายเป็น Dynamic Visualization[cite: 1, 2]</p>
+            </div>
+            <div class="card">
+                <h3>Phase 3: Stabilization</h3>
+                <p>ตรวจสอบความถูกต้องของข้อมูล (Data Integrity) และทดสอบระบบการใช้งานจริง</p>
+            </div>
+        </div>
+    </header>
+
+    <footer>
+        &copy; 2026 Project Management Office - BOD Thailand Visualization Project (Phase 1)[cite: 1]
+    </footer>
+
+</body>
 </html>
-
