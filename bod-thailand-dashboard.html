@@ -3,370 +3,300 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BOD Thailand Intelligence Dashboard | Official Prototype</title>
+<title>BOD Thailand Intelligence Dashboard | Official Prototype V2.5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg-0: #050810;
-    --bg-1: #0c1222;
-    --bg-2: #161c30;
-    --bg-3: #1d2540;
-    --line: rgba(255,255,255,0.06);
-    --line-2: rgba(255,255,255,0.15);
-    --text: #e9edf7;
-    --text-2: #94a3b8;
+    --bg-main: #050810;
+    --bg-side: #0a0e1a;
+    --bg-card: #0f172a;
     --accent: #00f2ff;
-    --danger: #ff4d4d;
-    --success: #00e676;
-    --ncd: rgba(0, 242, 255, 0.15);
-    --inj: rgba(255, 77, 77, 0.15);
-    --com: rgba(0, 230, 118, 0.15);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --border: rgba(255, 255, 255, 0.08);
+    --glass: rgba(255, 255, 255, 0.03);
   }
 
   * { box-sizing: border-box; }
   body {
-    background-color: var(--bg-0);
-    color: var(--text);
-    font-family: 'IBM+Plex+Sans+Thai', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
     margin: 0;
-    padding: 24px;
-    -webkit-font-smoothing: antialiased;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
   }
 
-  .header-bar {
+  /* --- Sidebar Premium UI --- */
+  .sidebar {
+    width: 260px;
+    background: var(--bg-side);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    z-index: 100;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    box-shadow: 0 0 15px var(--accent);
+  }
+
+  .nav-menu { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+  .nav-item {
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+  }
+  .nav-item.active {
+    background: rgba(0, 242, 255, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+  }
+  .nav-item:hover:not(.active) { background: var(--glass); color: #fff; }
+
+  /* --- Main Content Area --- */
+  .main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 30px;
+    background: radial-gradient(circle at top right, rgba(0, 242, 255, 0.03), transparent);
+  }
+
+  .top-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--line);
   }
 
-  .title-group h1 {
-    font-size: 26px;
-    margin: 0 0 8px 0;
-    background: linear-gradient(90deg, #fff, var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-family: 'Inter', 'IBM+Plex+Sans+Thai', sans-serif;
-  }
-
-  .title-group p { margin: 0; color: var(--text-2); font-size: 13px; }
-
-  .filter-group select {
-    background: var(--bg-2);
-    color: #fff;
-    border: 1px solid var(--line-2);
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-    cursor: pointer;
-  }
+  .title-group h1 { font-size: 26px; margin: 0 0 5px 0; font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: -0.5px; }
+  .title-group p { margin: 0; color: var(--text-secondary); font-size: 14px; }
 
   /* KPI Grid */
   .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin-bottom: 30px;
   }
-
   .kpi-card {
-    background: var(--bg-1);
+    background: var(--bg-card);
     padding: 24px;
-    border-radius: 12px;
-    border: 1px solid var(--line);
-    position: relative;
-    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--border);
   }
+  .kpi-label { color: var(--text-secondary); font-size: 13px; margin-bottom: 10px; }
+  .kpi-val { font-size: 28px; font-weight: 800; font-family: 'Inter', sans-serif; color: #fff; }
 
-  .kpi-card::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--line-2);
-  }
-  .kpi-card.primary::before { background: var(--accent); }
-  .kpi-card.secondary::before { background: var(--success); }
-
-  .kpi-label { color: var(--text-2); font-size: 13px; font-weight: 500; margin-bottom: 10px; }
-  .kpi-value { font-size: 32px; font-weight: 800; font-family: 'Inter', sans-serif; line-height: 1.1; }
-  .kpi-sub { font-size: 12px; margin-top: 10px; display: flex; align-items: center; gap: 6px; }
-
-  /* Charts Area */
-  .charts-grid {
+  /* Dashboard Layout Grid */
+  .dashboard-grid {
     display: grid;
-    grid-template-columns: 2.5fr 1fr;
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
   }
 
   .panel {
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 24px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid var(--border);
   }
 
-  .panel-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #fff; }
+  .panel-title { font-weight: 600; margin-bottom: 20px; font-size: 17px; display: flex; align-items: center; gap: 10px; }
 
-  /* Premium Table */
-  .table-wrapper {
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    overflow-x: auto;
+  /* --- แผนที่ 13 เขตสุขภาพ --- */
+  .map-container {
+    width: 100%;
+    height: 450px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 1px dashed rgba(255,255,255,0.1);
   }
 
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { 
-    background: var(--bg-2); 
-    color: var(--text-2); 
-    text-align: left; 
-    padding: 16px; 
-    font-weight: 500; 
-    white-space: nowrap; 
-    border-bottom: 1px solid var(--line);
+  .map-placeholder {
+    text-align: center;
+    color: var(--accent);
   }
-  td { padding: 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-  tr:hover { background: var(--bg-2); }
 
-  .badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase;}
-  .b-ncd { background: var(--ncd); color: var(--accent); }
-  .b-inj { background: var(--inj); color: var(--danger); }
-  .b-com { background: var(--com); color: var(--success); }
-
+  /* Table Style */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  .data-table th { text-align: left; padding: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 12px; border-bottom: 1px solid var(--border); }
   .mono { font-family: 'JetBrains Mono', monospace; }
-  .text-right { text-align: right; }
-  .trend-up { color: var(--danger); }
-  .trend-down { color: var(--success); }
 
-  .spark-container { width: 84px; height: 28px; }
-  .spark polyline { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 </style>
 </head>
 <body>
 
-<div class="header-bar">
-  <div class="title-group">
-    <h1>Burden of Disease Intelligence</h1>
-    <p>Data Source: summary_subnational65_age_grp8 | Engine: V2.4</p>
+<div class="sidebar">
+  <div class="logo-area">
+    <div class="logo-icon"></div>
+    <span style="font-weight: 800; font-size: 20px; font-family: 'Inter'; letter-spacing: -1px;">BOD INTEL</span>
   </div>
-  <div class="filter-group">
-    <select id="regionSelector" onchange="updateDashboard()">
-      <option value="national">ระดับประเทศ (National)</option>
-      <option value="13">เขตสุขภาพที่ 13 (กรุงเทพมหานคร)</option>
-      <option value="1">เขตสุขภาพที่ 1 (เชียงใหม่, เชียงราย...)</option>
-    </select>
+  
+  <ul class="nav-menu">
+    <li class="nav-item active">Overview</li>
+    <li class="nav-item">Health Indicators</li>
+    <li class="nav-item">Trends (Time-Series)</li>
+    <li class="nav-item">Disease Ranking</li>
+    <li class="nav-item">Risk Factors</li>
+  </ul>
+
+  <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);">
+    <p style="font-size: 11px; color: var(--text-secondary);">IHPP FAST-TRACK V2.5</p>
   </div>
 </div>
 
-<div class="kpi-grid">
-  <div class="kpi-card primary">
-    <div class="kpi-label">Total DALYs (ปีสุขภาวะที่สูญเสีย)</div>
-    <div class="kpi-value" style="color: var(--accent)" id="kpi-daly">15,420,500</div>
-    <div class="kpi-sub"><span class="trend-up">↑ 1.2%</span> เทียบกับฐานข้อมูลปี 62</div>
+<div class="main-content">
+  <div class="top-header">
+    <div class="title-group">
+      <h1>Dashboard ภาระโรคประเทศไทย</h1>
+      <p>อ้างอิงข้อมูล: summary_subnational65_asr (ปี 2565)</p>
+    </div>
+    <div class="controls">
+      <select style="background:var(--bg-side); color:#fff; border:1px solid var(--border); padding:10px 20px; border-radius:12px;">
+        <option>ปีงบประมาณ 2565</option>
+        <option>ปีงบประมาณ 2562</option>
+      </select>
+    </div>
   </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Life Expectancy (ชาย)</div>
-    <div class="kpi-value" id="kpi-le-m">72.5 <span style="font-size:16px;color:var(--text-2)">ปี</span></div>
-    <div class="kpi-sub"><span class="trend-down">↓ -0.1</span> อายุเฉลี่ยเมื่อแรกเกิด</div>
-  </div>
-  <div class="kpi-card">
-    <div class="kpi-label">Life Expectancy (หญิง)</div>
-    <div class="kpi-value" id="kpi-le-f">79.8 <span style="font-size:16px;color:var(--text-2)">ปี</span></div>
-    <div class="kpi-sub"><span class="trend-down">↓ -0.2</span> อายุเฉลี่ยเมื่อแรกเกิด</div>
-  </div>
-  <div class="kpi-card secondary">
-    <div class="kpi-label">HALE (อายุคาดเฉลี่ยสุขภาวะรวม)</div>
-    <div class="kpi-value" style="color: var(--success)" id="kpi-hale">68.5 <span style="font-size:16px;color:var(--text-2)">ปี</span></div>
-    <div class="kpi-sub">สะท้อนคุณภาพชีวิตสุทธิ</div>
-  </div>
-</div>
 
-<div class="charts-grid">
-  <div class="panel">
-    <div class="panel-title">DALYs Distribution by 8 Age Groups (อ้างอิง CSV: age_grp8)</div>
-    <canvas id="ageChart" height="90"></canvas>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">DALY Total</div>
+      <div class="kpi-val">15.42M</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">LE Male (อายุคาดเฉลี่ย)</div>
+      <div class="kpi-val" style="color: var(--accent);">72.5</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">LE Female (อายุคาดเฉลี่ย)</div>
+      <div class="kpi-val" style="color: var(--accent);">79.8</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">HALE (อายุสุขภาวะ)</div>
+      <div class="kpi-val" style="color: #00e676;">68.5</div>
+    </div>
   </div>
-  <div class="panel">
-    <div class="panel-title">Causes Ratio (Level 1)</div>
-    <div style="position:relative; height:220px; display:flex; justify-content:center;">
-      <canvas id="causeChart"></canvas>
+
+  <div class="dashboard-grid">
+    <div class="panel">
+      <div class="panel-title">Geo-Spatial Analysis (13 เขตสุขภาพ)</div>
+      <div class="map-container">
+        <div class="map-placeholder">
+          <svg width="200" height="300" viewBox="0 0 100 150">
+            <path d="M50 10 L80 40 L70 140 L30 140 L20 40 Z" fill="rgba(0, 242, 255, 0.1)" stroke="var(--accent)" stroke-width="1" />
+            <text x="50" y="80" fill="var(--accent)" font-size="6" text-anchor="middle">THAILAND HEALTH REGIONS</text>
+          </svg>
+          <p style="font-size: 12px; margin-top: 15px;">Interactive Heatmap (ASR Data)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">8 Age Groups Distribution (DALY Value)</div>
+      <canvas id="ageGroupsChart"></canvas>
+      
+      <div style="margin-top: 30px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>เขตสุขภาพ</th>
+              <th>สถานะ</th>
+              <th style="text-align:right;">DALY Rate (ASR)</th>
+            </tr>
+          </thead>
+          <tbody id="regionTable">
+            </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="panel" style="padding:0; overflow:hidden; border:none;">
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Disease Group (codv)</th>
-          <th>Category</th>
-          <th class="text-right">DALYs</th>
-          <th class="text-right">YLL (สูญเสียจากตายก่อนวัย)</th>
-          <th class="text-right">YLD (สูญเสียจากพิการ)</th>
-          <th class="text-right">Rate (/100k)</th>
-          <th>5-Yr Trend</th>
-          <th class="text-right">Change</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        </tbody>
-    </table>
-  </div>
-</div>
-
 <script>
-  // 1. ฟังก์ชันสร้างเส้นกราฟจิ๋ว (Sparkline) ที่อ้ายออกแบบไว้
-  function miniSpark(values, color) {
-    const w = 84, h = 28, pad = 2;
-    const min = Math.min(...values), max = Math.max(...values);
-    const span = (max - min) || 1;
-    const points = values.map((v, i) => {
-      const x = pad + (i * (w - pad*2) / (values.length - 1));
-      const y = h - pad - ((v - min) / span) * (h - pad*2);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(' ');
-    
-    return `
-      <div class="spark-container">
-        <svg class="spark" viewBox="0 0 ${w} ${h}">
-          <polyline points="${points}" stroke="${color}" />
-        </svg>
-      </div>
-    `;
-  }
-
-  // 2. ฐานข้อมูลจำลอง (อิงตามไฟล์ Drive: summary_subnational65)
-  const dashboardData = {
-    national: {
-      daly: "15,420,500", le_m: "72.5", le_f: "79.8", hale: "68.5",
-      ageData: [150000, 120000, 850000, 1200000, 2500000, 3200000, 2800000, 1500000],
-      causeData: [74, 14, 12]
-    },
-    13: { // กทม.
-      daly: "2,150,000", le_m: "74.1", le_f: "81.2", hale: "70.1",
-      ageData: [20000, 15000, 120000, 250000, 500000, 550000, 450000, 245000],
-      causeData: [80, 10, 10]
-    },
-    1: { // เขตภาคเหนือ
-      daly: "1,850,000", le_m: "71.5", le_f: "78.5", hale: "67.2",
-      ageData: [18000, 14000, 110000, 190000, 320000, 480000, 420000, 298000],
-      causeData: [70, 18, 12]
-    }
+  // 1. ข้อมูลจากไฟล์ summary_subnational65_age_grp8_test.csv (จำลอง 8 กลุ่มอายุ)
+  const ageData = {
+    labels: ['0-4', '5-14', '15-29', '30-44', '45-59', '60-69', '70-79', '80+'],
+    values: [150200, 115400, 845600, 1250300, 2480500, 3150200, 2780400, 1480500]
   };
 
-  // ข้อมูลตาราง (จำลองการ Map รหัสโรค)
-  const diseaseTable = [
-    { rank: 1, name: "โรคหลอดเลือดสมอง (Stroke)", cat: "NCDs", cls: "b-ncd", daly: 1250400, yll: 850200, yld: 400200, rate: 1850.5, hist: [110,115,118,122,125], trend: 2.4, color: "#00f2ff" },
-    { rank: 2, name: "อุบัติเหตุทางถนน (Road Traffic Injuries)", cat: "Injuries", cls: "b-inj", daly: 980500, yll: 920100, yld: 60400, rate: 1450.2, hist: [105,102,99,100,98], trend: -1.1, color: "#ff4d4d" },
-    { rank: 3, name: "เบาหวาน (Diabetes Mellitus)", cat: "NCDs", cls: "b-ncd", daly: 720000, yll: 300000, yld: 420000, rate: 1065.1, hist: [65,68,70,71,72], trend: 3.5, color: "#00f2ff" },
-    { rank: 4, name: "โรคติดเชื้อทางเดินหายใจส่วนล่าง", cat: "Communicable", cls: "b-com", daly: 250000, yll: 210000, yld: 40000, rate: 370.4, hist: [30,28,26,25,25], trend: -0.5, color: "#00e676" }
+  // 2. ข้อมูลจากไฟล์ summary_subnational65_asr_test.csv (13 เขตสุขภาพ)
+  const regionStats = [
+    { name: 'เขตสุขภาพที่ 1', rate: 18450, status: 'High' },
+    { name: 'เขตสุขภาพที่ 4', rate: 16210, status: 'Normal' },
+    { name: 'เขตสุขภาพที่ 10', rate: 19820, status: 'Critical' },
+    { name: 'เขตสุขภาพที่ 13 (กทม.)', rate: 14500, status: 'Low' }
   ];
 
-  // 3. กำหนดตัวแปร Chart.js
-  let chartAge, chartCause;
-
-  function initCharts() {
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.font.family = "'IBM Plex Sans Thai', sans-serif";
-
-    // Bar Chart (8 Age Groups)
-    const ctxA = document.getElementById('ageChart').getContext('2d');
-    chartAge = new Chart(ctxA, {
-      type: 'bar',
-      data: {
-        labels: ['0-4 ปี', '5-14 ปี', '15-29 ปี', '30-44 ปี', '45-59 ปี', '60-69 ปี', '70-79 ปี', '80+ ปี'],
-        datasets: [{
-          label: 'DALYs',
-          data: dashboardData['national'].ageData,
-          backgroundColor: '#00f2ff',
-          borderRadius: 4,
-          barPercentage: 0.6
-        }]
+  // Render กราฟอายุ
+  const ctx = document.getElementById('ageGroupsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ageData.labels,
+      datasets: [{
+        label: 'DALY Value',
+        data: ageData.values,
+        backgroundColor: 'rgba(0, 242, 255, 0.5)',
+        borderColor: '#00f2ff',
+        borderWidth: 1,
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
       },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false } },
-          x: { grid: { display: false }, border: { display: false } }
-        }
-      }
-    });
+      plugins: { legend: { display: false } }
+    }
+  });
 
-    // Doughnut Chart (Categories)
-    const ctxC = document.getElementById('causeChart').getContext('2d');
-    chartCause = new Chart(ctxC, {
-      type: 'doughnut',
-      data: {
-        labels: ['NCDs', 'Injuries', 'Communicable'],
-        datasets: [{
-          data: dashboardData['national'].causeData,
-          backgroundColor: ['#00f2ff', '#ff4d4d', '#00e676'],
-          borderWidth: 0,
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, cutout: '75%',
-        plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } }
-        }
-      }
-    });
-  }
+  // Render ตารางเขตพื้นที่
+  const tableBody = document.getElementById('regionTable');
+  tableBody.innerHTML = regionStats.map(r => `
+    <tr>
+      <td>${r.name}</td>
+      <td style="color: ${r.status === 'Critical' ? '#ff4d4d' : '#00e676'}">${r.status}</td>
+      <td style="text-align:right;" class="mono">${r.rate.toLocaleString()}</td>
+    </tr>
+  `).join('');
 
-  // 4. ฟังก์ชันอัปเดตหน้าจอทั้งหมดเมื่อเปลี่ยนภูมิภาค
-  function updateDashboard() {
-    const region = document.getElementById('regionSelector').value;
-    const data = dashboardData[region];
-
-    // อัปเดต KPI
-    document.getElementById('kpi-daly').innerText = data.daly;
-    document.getElementById('kpi-le-m').innerHTML = `${data.le_m} <span style="font-size:16px;color:var(--text-2)">ปี</span>`;
-    document.getElementById('kpi-le-f').innerHTML = `${data.le_f} <span style="font-size:16px;color:var(--text-2)">ปี</span>`;
-    document.getElementById('kpi-hale').innerHTML = `${data.hale} <span style="font-size:16px;color:var(--text-2)">ปี</span>`;
-
-    // อัปเดตกราฟ
-    chartAge.data.datasets[0].data = data.ageData;
-    chartAge.update();
-    chartCause.data.datasets[0].data = data.causeData;
-    chartCause.update();
-  }
-
-  // 5. Render ตาราง
-  function renderTable() {
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = diseaseTable.map(row => {
-      const trendIcon = row.trend > 0 ? '↑' : '↓';
-      const trendClass = row.trend > 0 ? 'trend-up' : 'trend-down';
-      return `
-        <tr>
-          <td style="font-weight:600; color:var(--text-2)">${row.rank}</td>
-          <td style="font-weight:500;">${row.name}</td>
-          <td><span class="badge ${row.cls}">${row.cat}</span></td>
-          <td class="text-right mono" style="color:var(--text)">${row.daly.toLocaleString()}</td>
-          <td class="text-right mono" style="color:var(--text-2)">${row.yll.toLocaleString()}</td>
-          <td class="text-right mono" style="color:var(--text-2)">${row.yld.toLocaleString()}</td>
-          <td class="text-right mono">${row.rate.toFixed(1)}</td>
-          <td>${miniSpark(row.hist, row.color)}</td>
-          <td class="text-right mono"><span class="${trendClass}">${trendIcon} ${Math.abs(row.trend)}%</span></td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  // เริ่มต้นทำงาน
-  window.onload = () => {
-    initCharts();
-    renderTable();
-  };
 </script>
 
 </body>
